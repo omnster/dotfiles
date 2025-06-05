@@ -1,0 +1,25 @@
+
+configuration {
+   display-drun:    "Open";
+   display-run:     "Run";
+   display-window:  "Window";
+   show-icons:      true;
+   sidebar-mode:    true;
+   // matching: "fuzzy";
+}
+
+@theme "sidebar"
+
+* {
+   font: "Terminus (TTF) 12";
+}
+
+window {
+   location:	 south west;
+   anchor:		 south west;
+   orientation: horizontal;
+   children:	 [mainbox];
+   width: 50%;
+   height: 45%;
+}
+
