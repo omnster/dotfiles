@@ -434,7 +434,7 @@ exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id sleep 1 && feh --bg-fill --randomize ~/Pictures/wallpapers
 
 # set powersavings for display:
-exec --no-startup-id xset s 480 dpms 600 600 600
+exec --no-startup-id xset s 1200 dpms 1800 3600 5400
 
 # disable power saving (for example if using xscreensaver)
 #exec --no-startup-id xset -dpms

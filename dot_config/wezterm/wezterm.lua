@@ -16,7 +16,7 @@ config.audible_bell = "Disabled"
 config.font = wezterm.font_with_fallback {
   'Terminess Nerd Font',
 }
-config.font_size = 12
+config.font_size = 10
 
 return config
 
