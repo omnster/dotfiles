@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+oo() {
+    for f in "$@"
+    do
+        (xdg-open "$f">/dev/null 2>&1 &)
+    done
+}
+
+oo $@
