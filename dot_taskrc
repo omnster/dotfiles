@@ -1,0 +1,157 @@
+# vim: ft=conf fdm=marker fmr={{{,}}}
+# [Created by task 2.5.1 10/27/2020 20:03:24]
+# Taskwarrior program configuration file.
+# For more documentation, see http://taskwarrior.org or try 'man task', 'man task-color',
+# 'man task-sync' or 'man taskrc'
+
+# Here is an example of entries that use the default, override and blank values
+#   variable=foo   -- By specifying a value, this overrides the default
+#   variable=      -- By specifying no value, this means no default
+#   #variable=foo  -- By commenting out the line, or deleting it, this uses the default
+
+# Use the command 'task show' to see all defaults and overrides
+
+# Files
+data.location=~/.task
+
+# Color theme (uncomment one to use)
+# include /usr/share/doc/task/rc/light-16.theme
+# include /usr/share/doc/task/rc/light-256.theme
+# include /usr/share/doc/task/rc/dark-16.theme
+include /usr/share/doc/task/rc/dark-256.theme
+# include /usr/share/doc/task/rc/dark-red-256.theme
+# include /usr/share/doc/task/rc/dark-green-256.theme
+# include /usr/share/doc/task/rc/dark-blue-256.theme
+# include ~/.config/taskwarrior/task.theme
+# include /usr/share/doc/task/rc/bubblegum-256.theme
+# include /usr/share/doc/task/rc/dark-violets-256.theme
+# include /usr/share/doc/task/rc/dark-yellow-green.theme
+# include /usr/share/doc/task/rc/dark-gray-256.theme
+# include /usr/share/doc/task/rc/dark-gray-blue-256.theme
+# include /usr/share/doc/task/rc/solarized-dark-256.theme
+# include /usr/share/doc/task/rc/solarized-light-256.theme
+# include /usr/share/doc/task/rc/no-color.theme
+
+# Date formats #{{{
+
+	dateformat=d.m.y
+	dateformat.report=D.M.y
+	dateformat.holiday=D.M.y
+	dateformat.annotation=D.M.y
+
+weekstart=Monday
+
+# }}}
+nag=
+
+default.command=next pro.not:lit pro.not:games pro.not:people -meta -DEF due.not:someday
+
+report.next.columns=id,start.age,entry.age,depends,priority,project,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.next.labels=ID,Active,Age,Deps,P,Project,S,Due,Until,Description,Urg
+
+
+
+news.version=193.3.0
+
+max_active_tasks=1
+
+reserved.lines=5
+
+recurrence.confirmation=no
+
+# Custom priorities/urgencies {{{
+# CUSTOM URGENCIES
+urgency.user.tag.meta.coefficient=-10
+
+urgency.user.tag.DEF.coefficient=-2
+urgency.user.tag.CHILD.coefficient=-6
+urgency.user.project.tech.coefficient=-1
+urgency.user.project.gtd.coefficient=-4
+
+uda.priority.values=H,M,,L
+
+urgency.uda.priority.H.coefficient= 8.0 # high Priority
+urgency.uda.priority.L.coefficient=-1.0 # low  Priority
+
+urgency.project.coefficient = 5.0
+urgency.due.coefficient                  = 18.0
+
+urgency.age.coefficient                     = 1.0 # coefficient for age
+
+## From docs https://taskwarrior.org/docs/urgency/
+##
+#urgency.user.tag.next.coefficient           =15.0 # +next tag
+#urgency.due.coefficient                     =12.0 # overdue or near due date
+#urgency.blocking.coefficient                = 8.0 # blocking other tasks
+#urgency.uda.priority.H.coefficient          = 6.0 # high Priority
+#urgency.uda.priority.M.coefficient          = 3.9 # medium Priority
+#urgency.uda.priority.L.coefficient          = 1.8 # low Priority
+#urgency.scheduled.coefficient               = 5.0 # scheduled tasks
+#urgency.active.coefficient                  = 4.0 # already started tasks
+#urgency.age.coefficient                     = 2.0 # coefficient for age
+#urgency.annotations.coefficient             = 1.0 # has annotations
+#urgency.tags.coefficient                    = 1.0 # has tags
+#urgency.project.coefficient                 = 1.0 # assigned to any project
+#urgency.user.project.My Project.coefficient = 5.0 # assigned to project:"My Project"
+#urgency.waiting.coefficient                 =-3.0 # waiting task
+#urgency.blocked.coefficient                 =-5.0 # blocked by other tasks
+
+#}}}
+
+# https://dev.to/onlyphantom/todo-gamification-with-taskwarrior-taskquant-3e38
+uda.score.type=numeric
+uda.score.label=Score 🏆
+urgency.uda.score.coefficient=2
+
+journal.time = 0  # If "1", will populate task annotations with 'started' and 'stopped' datestamps
+context.ffent.read=pro:s.ff.ent
+context.ffent.write=pro:s.ff.ent
+
+# Taskopen
+alias.addnote=execute /usr/share/taskopen/scripts/addnote
+
+search.case.sensitive=0
+
+report.newest.filter=status:pending limit:page
+# Original columns
+# report.newest.columns=id,start.age,entry,entry.age,modified.age,depends.indicator,priority,project,tags,recur.indicator,wait.remaining,scheduled.countdown,due,until.age,description
+# report.newest.labels ID,Active,Created,Age,Mod,D,P,Project,Tags,R,Wait,Sch,Due,Until,Description
+report.newest.columns=id,start.age,entry.age,depends.indicator,priority,project,recur.indicator,wait.remaining,scheduled.countdown,due,until.age,description
+report.newest.labels=ID,Active,Age,D,P,Project,R,Wait,Sch,Due,Until,Description
+
+
+report.s7.description=Summary of done tasks
+report.s7.columns=project,description.desc,end,entry,entry.age
+report.s7.sort=project+/,end-
+report.s7.filter=status:completed end.after:today-7day
+
+
+# ralph bean
+_forcecolor=yes
+defaultwidth=160
+
+report.work_report.description=now
+report.work_report.columns=priority,project,description,end,entry,entry.age
+report.work_report.labels=priority,project,description,completed,entered on,age
+report.work_report.sort=project+,end-
+report.work_report.filter=status:completed
+
+# Items in next 7 days Report
+report.7days.description=tasks due in next 7 days
+report.7days.columns=due,id,description.count,urgency.integer
+report.7days.dateformat=a
+report.7days.sort=due+/,urgency-
+#report.7days.filter=due.after:yesterday due.before=6days (+PENDING or +WAITING) -PARENT -DELETED
+report.7days.filter=(+OVERDUE or due.before=6days) (+PENDING or +WAITING) -PARENT -DELETED
+
+context.ngrev.read=pro:s.ng_rev
+context.ngrev.write=pro:s.ng_rev
+context.strob.read=pro:sci.sqz_strob
+context.strob.write=pro:sci.sqz_strob
+context.apd.read=pro:sci.apd
+context.apd.write=pro:sci.apd
+# taskd.server=app.wingtask.com:53589
+# taskd.key=/home/omn/.wingtask_certs/rkhbvs@gmail.com.key.pem
+# taskd.ca=/home/omn/.wingtask_certs/letsencrypt_root_cert.pem
+# taskd.certificate=/home/omn/.wingtask_certs/rkhbvs@gmail.com.cert.pem
+# taskd.credentials=WingTask/rkhbvs@gmail.com/cb365c08-314d-408d-957d-09bd75587c88
