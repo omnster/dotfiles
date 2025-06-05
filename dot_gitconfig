@@ -3,3 +3,5 @@
 	name = Andrey Rakhubovsky
 [credential]
 	helper = store
+[pull]
+	rebase = true

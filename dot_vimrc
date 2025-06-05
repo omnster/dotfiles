@@ -229,7 +229,9 @@ nmap <silent> gm <Plug>(coc-git-commit)
 omap <silent> ig <Plug>(coc-git-chunk-inner)
 xmap <silent> ig <Plug>(coc-git-chunk-inner)
 
-nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
+" nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
+nnoremap <leader>es :UltiSnipsEdit<cr>
+let g:UltiSnipsEditSplit='tabdo'
 
 "}}}
 

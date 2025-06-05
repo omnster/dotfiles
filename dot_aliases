@@ -171,3 +171,5 @@ daily_arxiv() {
   cd $ARXIVDIR
   uv run author_checker.py | pandoc -f markdown -t html -o $ARXIVHTML && oo $ARXIVHTML
 }
+
+alias cm='chezmoi'
