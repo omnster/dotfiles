@@ -6,6 +6,7 @@
 
 if [[ -x /usr/bin/keychain ]]; then
     eval $(/usr/bin/keychain --eval id_rsa --quick --quiet --noask)
+    keychain ~/.ssh/id_rsa --quick --quiet --noask
 fi
 
 # Periodic auto-update on Zsh startup: 'ask' or 'no'.
