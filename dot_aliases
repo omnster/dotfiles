@@ -1,0 +1,173 @@
+# vim:set et sw=2 ts=2 fdm=marker fmr={{{,}}}:
+
+# ls aliases{{{
+alias ls='ls -p --color=auto --group-directories-first -Gh'
+# alias ls=lsd
+alias l='ls -lA'
+alias ll='l -A'
+alias lt='l --color=auto -rth'
+alias ldir='ls -ldA'
+#}}}
+
+MANCOLS=70
+alias man='MANWIDTH=$((COLUMNS > $MANCOLS ? $MANCOLS : COLUMNS)) man'
+
+alias ncal='ncal -M'
+alias cal='cal -m'
+alias rsynccp='rsync --archive --modify-window=2 --progress --verbose --itemize-changes --stats --human-readable'
+alias cwd='pwd | pbcopy'
+
+# Copy/paste to system clipboard{{{
+pbcopy() {
+    xclip -sel clip -i
+}
+
+pbpaste() {
+    xclip -sel clip -o
+}
+# }}}
+# Open files silently {{{
+oo() {
+    for f in "$@"
+    do
+        (xdg-open "$f">/dev/null 2>&1 &)
+    done
+}
+# }}}
+# Weather in terminal{{{
+wttr()
+{
+    # change Paris to your default location
+    curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Olomouc}?q?2?n"
+    # | sed -e '/\(New feature\|Follow \)/d'
+}
+wtr(){
+    curl -s 'wttr.in/Olomouc?format=3'
+}
+# }}}
+# Taskwarrior, timewarrior and friends {{{
+alias t='task'
+alias ti='task add +inbox'
+alias ta='task add'
+alias to='taskopen'
+alias tal='task add dep:"$(task +LATEST uuids)"'
+
+tas() {
+    [[ "$#" -eq 0 ]] && return 0
+    proj=$1
+    shift
+    task add pro:sci.$proj $@
+}
+
+alias tw='timew'
+
+tww() {
+    [[ "$#" -eq 0 ]] && return 0
+    local to_start=$(task ids -PARENT "$@")
+    active_tasks="$(task _ids +ACTIVE)"
+    if [[ $(echo $to_start | tr '-' ' ' | wc -w ) -ne 1 ]]
+    then
+        echo "Ambigous task to start description"
+        return 1
+    else
+        if [[ ! -z $active_tasks ]]; then
+            task "$active_tasks"  stop
+        fi
+        task $to_start start
+    fi
+}
+
+twr() {
+    timew move @1 $@ :adjust
+}
+
+tm() {
+    task context show | grep -e '^No context' || task context none
+    tww +meta $@
+}
+
+tp() {
+    task context show | grep -e '^No context' || task context none
+    tww pro:people $@
+}
+
+tstop() {
+    task $(task _ids +ACTIVE) stop
+}
+
+twd() {
+    datestring=$@
+    date -d $datestring -Iminutes
+}
+
+twdx() {
+    date -d "$*" -Iminutes
+}
+
+twstop() {
+    timew stop $(twd $@)
+}
+
+alias p='task rc.data.location:~/.task.papers/'
+
+
+td() {
+    date -d "$@" +"%d.%m.%y"
+}
+
+timewdate() {
+    date -I'minutes' -d "$@"
+}
+
+# Aliases for timetracking
+alias tt="arbtt-stats --for-each=day --filter='\$sampleage <12:00'"
+alias tta="arbtt-stats --m=0 --filter='\$sampleage <24:00' --dump-samples -x DevOps -x TimeTracking -x Programming -x Correspondence -x Recreation -x Analytics -x ProjectManagment -x Research | grep -F '(*)'"
+
+# }}}
+
+# Create directories in working folder # {{{
+nd() { 
+    if [[ $# -lt 2 ]]; then
+        echo "  Usage                     "
+        echo ""
+        echo "      nd 'prefix' 'dirname' ['date'] "
+        echo ""
+        return ""
+
+    fi
+    local the_dir=$HOME'/works/tmp/'
+
+    # If no 3rd argument, the date will be set to today
+    local date_text=$(date +"%y_%m_%d")
+    # If 3rd argument present, use date from it; free form input
+    if [[ $# -eq 3 ]]; then
+        date_text=$(date +"%y_%m_%d" -d "$3")
+    fi
+
+    local prefix='t'
+    local text='created@'$(date +%T)
+    prefix="$1"
+    text="$2"
+    text=$(echo "$text" | sed -e 's/^ *//' -e 's/ *$//' )
+    text=$(echo "$text" | sed -e 's/[^A-Za-z0-9_:-]/_/g' )
+    text=$(echo "$text" | sed -e 's/_\+/_/g')
+    text=$(echo "$text" | sed -e 's/_\+$//g')
+    local dir_to_create=$prefix'-'$date_text'-'$text
+    dir_to_create="$the_dir""$dir_to_create"
+
+    mkdir -p $dir_to_create && cd $dir_to_create
+}
+# }}}
+
+# keep lectures/talks in bare repo
+alias lecture='git --git-dir=$HOME/works/talks.public.git/ --work-tree=$HOME/works/'
+
+# check new arxiv submissions
+# alias daily_arxiv='author_checker.py | pandoc -f markdown -t html -o /tmp/arxiv.html && oo /tmp/arxiv.html'
+
+daily_arxiv() {
+  local ARXIVDIR="$HOME/src/arxiv/"
+  local ARXIVHTML="/tmp/arxiv_$(date -I).html"
+  cd $ARXIVDIR
+  uv run author_checker.py | pandoc -f markdown -t html -o $ARXIVHTML && oo $ARXIVHTML
+}
