@@ -1,0 +1,437 @@
+" vim:set fdm=marker fmr={{{,}}}:
+set nocompatible
+let mapleader=' '
+let maplocalleader=' '
+set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+
+set vb
+set t_vb=
+
+nnoremap ,v :e ~/.vimrc<cr>
+nnoremap ,i :sp ~/.config/i3/config<cr>
+augroup vimrc
+  au!
+  au BufWritePost ~/.vimrc :so ~/.vimrc
+augroup END
+
+nnoremap ,j :update<cr>
+
+set autochdir
+set encoding=utf-8
+set number
+set splitbelow
+set splitright
+set wrap
+set nolist
+set expandtab
+set tabstop=2 sts=2 sw=2
+set title
+set hidden
+set showmatch matchtime=2
+set ignorecase smartcase
+set updatetime=100
+set formatoptions=croqnlj
+set backspace=indent,eol,start
+set noswapfile
+set termguicolors
+set cursorline
+set shortmess+=ac
+set pumheight=20
+set laststatus=2
+set showtabline=2
+set breakindent
+set showbreak='++'
+set showcmd
+set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+set ttyfast
+set autowrite autoread
+set shiftround
+set linebreak
+set wrap
+set cpoptions+=J
+set wildmenu wildmode=list:longest
+set incsearch hlsearch
+
+set spellfile=~/.vim/custom-dictionary.utf-8.add,~/.vim-local-dictionary.utf-8.add
+nnoremap zG 2zg
+" Time out on key codes but not mappings.
+" Basically this makes terminal Vim work sanely.
+set notimeout
+set ttimeout
+set ttimeoutlen=10
+
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim
+        \ --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin()
+" Plugins{{{
+" Colors "{{{
+Plug 'flazz/vim-colorschemes'
+Plug 'mcchrish/vim-no-color-collections'
+Plug 'rafi/awesome-vim-colorschemes'
+Plug 'sjl/badwolf'
+Plug 'omnster/omnster.vim'
+"}}}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-easy-align'
+" vimtex{{{
+Plug 'lervag/vimtex'
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_compiler_method = 'latexmk'
+let g:vimtex_compiler_latexmk = {
+      \ 'aux_dir' : '',
+      \ 'out_dir' : '',
+      \ 'callback' : 1,
+      \ 'continuous' : 1,
+      \ 'executable' : 'latexmk',
+      \ 'hooks' : [],
+      \ 'options' : [
+      \   '-verbose',
+      \   '-file-line-error',
+      \   '-synctex=0',
+      \   '-interaction=nonstopmode',
+      \ ],
+      \}
+let g:vimtex_quickfix_ignore_filters = [
+      \ 'Marginpar on page',
+      \]
+let g:vimtex_quickfix_autoclose_after_keystrokes = 10
+let g:vimtex_quickfix_open_on_warning = 0
+let g:matchup_override_vimtex = 1
+let g:matchup_matchparen_deferred = 1
+"}}} vimtex
+Plug 'lervag/wiki.vim'
+let g:wiki_root='~/wiki'
+Plug 'lervag/lists.vim'
+
+Plug 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger = '<c-j>'
+let g:UltiSnipsJumpForwardTrigger = '<c-j>'
+let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
+
+Plug 'honza/vim-snippets'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fugitive'
+
+Plug 'romainl/vim-cool'
+
+Plug 'dense-analysis/ale'
+" coc.nvim{{{
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'npm ci'}
+let g:coc_global_extensions = [
+      \'https://github.com/rafamadriz/friendly-snippets',
+      \'coc-bibtex',
+      \'coc-dictionary',
+      \'coc-git',
+      \'coc-highlight',
+      \'coc-json',
+      \'coc-lists',
+      \'coc-ltex',
+      \'coc-markdownlint',
+      \'coc-marketplace',
+      \'coc-sh',
+      \'coc-tag',
+      \'coc-typos',
+      \'coc-ultisnips',
+      \'coc-vimtex',
+      \'coc-yaml',
+      \'coc-yank'
+      \]
+"https://github.com/fannheyward/init.vim/blob/master/init.vim
+set tagfunc=CocTagFunc
+nmap <silent> ]s <Plug>(coc-typos-next)
+nmap <silent> [s <Plug>(coc-typos-prev)
+nmap <silent> z= <Plug>(coc-typos-fix)
+nmap <silent> <expr> [c &diff ? '[c' : '<Plug>(coc-git-prevchunk)'
+nmap <silent> <expr> ]c &diff ? ']c' : '<Plug>(coc-git-nextchunk)'
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent><nowait> <space>f  :<C-u>CocList files<CR>
+nnoremap <silent><nowait> <space>o  :<C-u>CocList -A outline -kind<CR>
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<CR>
+nnoremap <silent><nowait> <space>l  :<C-u>CocList lines<CR>
+nnoremap <silent><nowait> <space>q  :<C-u>CocList quickfix<CR>
+nnoremap <silent><nowait> <space>w  :<C-u>CocList -I -N symbols<CR>
+nnoremap <silent><nowait> <space>y  :<C-u>CocList -A --normal yank<CR>
+nnoremap <silent><nowait> <space>b  :<C-u>CocList -A -N --normal buffers<CR>
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+nnoremap <silent><nowait> <space>s  :exe 'CocList -I --normal --input='.expand('<cword>').' grep'<CR>
+nnoremap <silent><nowait> <space>S  :exe 'CocList -I --normal --input='.expand('<cword>').' words'<CR>
+nnoremap <silent><nowait> <space>d  :call CocActionAsync('jumpDefinition', v:false)<CR>
+
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <silent><expr> <backspace> coc#pum#visible() ? "\<bs>\<c-r>=coc#start()\<CR>" : "\<bs>"
+inoremap <silent><expr> <C-x><C-z> coc#pum#visible() ? coc#pum#stop() : "\<C-x>\<C-z>"
+" With coc-snippets{{{
+" inoremap <silent><expr> <TAB>
+"       \ coc#pum#visible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ?
+"       \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ CheckBackspace() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+"}}}
+" Without coc-snippets{{{
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+"}}}
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+let g:coc_snippet_next = '<tab>'
+
+inoremap <silent><expr> <C-n> coc#pum#visible() ? coc#pum#next(1) : "\<C-n>"
+inoremap <silent><expr> <C-p> coc#pum#visible() ? coc#pum#prev(1) : "\<C-p>"
+
+inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <C-e> coc#pum#visible() ? coc#pum#cancel() : "\<End>"
+" inoremap <silent><expr> <C-e> coc#pum#visible() ? coc#pum#cancel() : "\<C-e>"
+
+" Original:
+" inoremap <silent><expr> <C-y> coc#pum#visible() ? coc#pum#confirm() : "\<C-y>"
+" My attempt:
+inoremap <silent><expr> <C-y> coc#pum#visible() ? coc#pum#confirm() : coc#refresh()
+
+nmap <silent> gd :call <SID>go_to_definition()<CR>
+nmap <silent> gD <Plug>(coc-declaration)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gn <Plug>(coc-rename)
+nmap <silent> ge <Plug>(coc-diagnostic-next)
+nmap <silent> gA <Plug>(coc-codeaction)
+nmap <silent> gl <Plug>(coc-codeaction-line)
+nmap <silent> ga <Plug>(coc-codeaction-cursor)
+nmap <silent> gs <Plug>(coc-fix-current)
+nmap <silent> gk <Plug>(coc-git-chunkinfo)
+nmap <silent> gm <Plug>(coc-git-commit)
+omap <silent> ig <Plug>(coc-git-chunk-inner)
+xmap <silent> ig <Plug>(coc-git-chunk-inner)
+
+nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
+
+"}}}
+
+Plug 'mhinz/vim-signify'
+Plug 'andymass/vim-matchup'
+
+Plug 'itchyny/lightline.vim' "{{{
+let g:lightline = {
+      \ 'mode_map': {
+        \ 'n' : 'N',
+        \ 'i' : 'I',
+        \ 'R' : 'R',
+        \ 'v' : 'V',
+        \ 'V' : 'VL',
+        \ "\<C-v>": 'VB',
+        \ 'c' : 'C',
+        \ 's' : 'S',
+        \ 'S' : 'SL',
+        \ "\<C-s>": 'SB',
+        \ 't': 'T',
+        \ },
+      \ }
+"}}}
+
+Plug 'wakatime/vim-wakatime'
+
+"}}}
+call plug#end()
+
+set bg=dark
+colors badwolf
+
+" Maps {{{
+
+" Folding
+vnoremap \ zf
+nnoremap \ za
+
+" Indenting/dedenting
+vnoremap < <<gv
+vnoremap > >>gv
+
+" screen lines vs physical lines
+nnoremap <expr> j v:count ? 'j' : 'gj'
+nnoremap <expr> k v:count ? 'k' : 'gk'
+xnoremap <expr> j v:count ? 'j' : 'gj'
+xnoremap <expr> k v:count ? 'k' : 'gk'
+
+" Buffer navigation
+nnoremap <silent> gb    :bnext<cr>
+nnoremap <silent> gB    :bprevious<cr>
+nnoremap <silent> ]b    :bnext<cr>
+nnoremap <silent> [b    :bprevious<cr>
+
+" Navigate folds
+nnoremap          zv zMzvzz
+nnoremap <silent> zj zcjzOzz
+nnoremap <silent> zk zckzOzz
+
+" insert filename
+cnoremap <C-t> <C-R>=expand("%:p:h") . "/" <CR> 
+
+" }}} Maps
+" functions {{{
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+function! s:show_documentation()
+  if index(['vim', 'help'], &filetype) >= 0
+    execute 'help ' . expand('<cword>')
+  elseif &filetype ==# 'tex'
+    VimtexDocPackage
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+function! s:go_to_definition()
+  if CocActionAsync('jumpDefinition')
+    return v:true
+  endif
+
+  let ret = execute("silent! normal \<C-]>")
+  if ret =~ "Error" || ret =~ "错误"
+    call searchdecl(expand('<cword>'))
+  endif
+endfunction
+
+function! s:select_current_word()
+  if !get(g:, 'coc_cursors_activated', 0)
+    return "\<Plug>(coc-cursors-word)"
+  endif
+  return "*\<Plug>(coc-cursors-word):nohlsearch\<CR>"
+endfunc
+
+function! MyFoldText() " {{{
+    let line = getline(v:foldstart)
+
+    let nucolwidth = &fdc + &number * &numberwidth
+    let windowwidth = winwidth(0) - nucolwidth - 3
+    let foldedlinecount = v:foldend - v:foldstart
+
+    " expand tabs into spaces
+    let onetab = strpart('          ', 0, &tabstop)
+    let line = substitute(line, '\t', onetab, 'g')
+
+    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+    return line . ' ' . repeat("·",fillcharcount) . foldedlinecount . ' ' . ' '
+endfunction " }}}
+set foldtext=MyFoldText()
+" }}} functions
+" wildignore {{{
+set wildignore=*.o,*.obj,*~,*.exe,*.a,*.pdb,*.lib
+set wildignore+=*.so,*.dll,*.swp,*.egg,*.jar,*.class,*.pyc,*.pyo,*.bin,*.dex
+set wildignore+=*.log,*.pyc,*.sqlite,*.sqlite3,*.min.js,*.min.css,*.tags
+set wildignore+=*.zip,*.7z,*.rar,*.gz,*.tar,*.gzip,*.bz2,*.tgz,*.xz
+set wildignore+=*.png,*.jpg,*.gif,*.bmp,*.tga,*.pcx,*.ppm,*.img,*.iso
+set wildignore+=*.pdf,*.dmg,*.app,*.ipa,*.apk,*.mobi,*.epub
+set wildignore+=*.mp4,*.avi,*.flv,*.mov,*.mkv,*.swf,*.swc
+set wildignore+=*.ppt,*.pptx,*.doc,*.docx,*.xlt,*.xls,*.xlsx,*.odt,*.wps
+set wildignore+=*/.git/*,*/.svn/*,*.DS_Store
+set wildignore+=*/node_modules/*,*/nginx_runtime/*,*/build/*,*/logs/*,*/dist/*,*/tmp/*
+set wildignore+=.hg,.git,.svn                    " Version control
+set wildignore+=*.aux,*.out,*.toc                " LaTeX intermediate files
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest " compiled object files
+set wildignore+=*.spl                            " compiled spelling word lists
+set wildignore+=*.sw?                            " Vim swap files
+set wildignore+=*.DS_Store                       " OSX bullshit
+set wildignore+=*.luac                           " Lua byte code
+set wildignore+=migrations                       " Django migrations
+set wildignore+=*.pyc                            " Python byte code
+
+set wildignore+=*.orig                           " Merge resolution files
+" }}} wildignore
+" autocmds{{{
+autocmd FileType json syntax match Comment +\/\/.\+$+
+autocmd ColorScheme hi CursorLine cterm=None gui=None ctermbg=252 guibg=#3a3a3a
+" Only use cursorline for current window, except when in diff mode
+" https://github.com/lervag/dotvim/blob/3f385e80ff5c66591b95b3f9f2e4af065f081ac1/vimrc#L13C3-L15C75
+autocmd WinEnter,FocusGained * if !&diff | setlocal cursorline | endif
+autocmd WinLeave,FocusLost   * if !&diff | setlocal nocursorline | endif
+" Resize splits when the window is resized
+autocmd VimResized * :wincmd =
+autocmd BufReadPost *.log normal! G
+" Standard Input {{{
+augroup ft_stdin
+    au!
+    " Treat buffers from stdin (e.g.: echo foo | vim -) as scratch.
+    au StdinReadPost * :set buftype=nofile
+augroup END
+" }}}
+"}}}
+" Diffing and git stuff {{{
+set diffopt=filler,vertical,foldcolumn:0,context:4
+silent! set diffopt+=indent-heuristic,algorithm:patience
+silent! set diffopt+=hiddenoff
+
+match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+"}}}
+" Disable a lot of unnecessary internal plugins{{{
+let g:loaded_2html_plugin = 1
+let g:loaded_getscriptPlugin = 1
+let g:loaded_gzip = 1
+let g:loaded_logipat = 1
+let g:loaded_rrhelper = 1
+let g:loaded_spellfile_plugin = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_vimballPlugin = 1
+let g:loaded_zipPlugin = 1
+"}}}
+" Blink on focus gain{{{
+function! Pulse()
+    redir => old_hi
+        silent execute 'hi CursorLine'
+    redir END
+    let old_hi = split(old_hi, '\n')[0]
+    let old_hi = substitute(old_hi, 'xxx', '', '')
+
+    let steps = 8
+    let width = 1
+    let start = width
+    let end = steps * width
+    let color = 233
+
+    for i in range(start, end, width)
+        execute "hi CursorLine ctermbg=" . (color + i)
+        redraw
+        sleep 6m
+    endfor
+    for i in range(end, start, -1 * width)
+        execute "hi CursorLine ctermbg=" . (color + i)
+        redraw
+        sleep 6m
+    endfor
+
+    execute 'hi ' . old_hi
+endfunction 
+" don't seem to work
+autocmd FocusGained * call Pulse()
+"}}}
+" vim:set et sw=2 ts=2 tw=78 fdm=marker fmr={{{,}}}:
+
