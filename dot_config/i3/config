@@ -120,6 +120,9 @@ bindcode $mod+Shift+17    move container to workspace  $ws8
 bindcode $mod+Shift+18    move container to workspace  $ws9
 bindcode $mod+Shift+19    move container to workspace  $ws10
 
+bindsym $mod+x move workspace to output right
+bindsym $mod+z move workspace to output right
+
 # move focused container to workspace with numpad keys
 bindcode $mod+Shift+Mod2+87 	move container to workspace  $ws1
 bindcode $mod+Shift+Mod2+88 	move container to workspace  $ws2
@@ -357,6 +360,7 @@ bindsym $mod+g exec i3-input -F '[con_mark="%s"] focus' -l 1 -P 'Goto: '
 # bind program to workspace and focus to them on startup:
 assign [class="Xfce4-terminal"] $ws1
 assign [class="(?i)firefox"] $ws9
+assign [class="(?i)zotero"] $ws8
 assign [class="Thunar"] $ws3
 assign [class="thunderbird"] $ws4
 assign [class="TelegramDesktop"] $ws5
